@@ -123,20 +123,21 @@ namespace viewer.Controllers
             Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
             Console.WriteLine($"jsonContent: {jsonContent}");
 
-            return;
+            if (jsonContent.Contains("AdvancedMessageReceived"))
+            {
+                string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
+                NotificationMessagesClient notificationMessagesClient =
+                    new NotificationMessagesClient(connectionString);
 
-            string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
-            NotificationMessagesClient notificationMessagesClient =
-                new NotificationMessagesClient(connectionString);
+                string channelRegistrationId = "c25918d5-5214-487d-8a7d-8a80fd0a0abc";
 
-            string channelRegistrationId = "c25918d5-5214-487d-8a7d-8a80fd0a0abc";
+                var recipient = new List<string> { "+85297278816" };
+                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, "Yeah");
 
-            var recipient = new List<string> { "+85297278816" };
-            var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, "Yeah");
+                SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
 
-            SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
-
-            Console.WriteLine($"Message id: {result.Receipts[0].MessageId}");
+                Console.WriteLine($"Message id: {result.Receipts[0].MessageId}");
+            }
         }
 
         private async Task<IActionResult> HandleGridEvents(string jsonContent)
