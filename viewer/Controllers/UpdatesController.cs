@@ -67,7 +67,9 @@ namespace viewer.Controllers
             {
                 var jsonContent = await reader.ReadToEndAsync();
 
-                Console.WriteLine("Azure Communication Services - 1\n");
+                Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
+
+                await this.replyMessage(jsonContent);
 
                 // Check the event type.
                 // Return the validation code if it's 
@@ -123,9 +125,10 @@ namespace viewer.Controllers
             });
         }
 
-        private async Task replyMessage(GridEvent<Dictionary<string, string>> gridEvent)
+        private async Task replyMessage(string jsonContent)
         {
             Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
+            Console.WriteLine($"jsonContent: {jsonContent}");
 
             string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
             NotificationMessagesClient notificationMessagesClient =
@@ -133,7 +136,7 @@ namespace viewer.Controllers
 
             string channelRegistrationId = "c25918d5-5214-487d-8a7d-8a80fd0a0abc";
 
-            var recipient = new List<string> { gridEvent.Data["from"] };
+            var recipient = new List<string> { "+85297278816" };
             var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, "Yeah");
 
             SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
