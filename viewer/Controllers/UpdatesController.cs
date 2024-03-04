@@ -123,6 +123,8 @@ namespace viewer.Controllers
             Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
             Console.WriteLine($"jsonContent: {jsonContent}");
 
+            return;
+
             string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
             NotificationMessagesClient notificationMessagesClient =
                 new NotificationMessagesClient(connectionString);
