@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using viewer.Hubs;
 using viewer.Models;
+using Azure;
+using Azure.Communication.Messages;
 
 namespace viewer.Controllers
 {
@@ -106,12 +108,37 @@ namespace viewer.Controllers
                 gridEvent.EventTime.ToLongTimeString(),
                 jsonContent.ToString());
 
+
+
+            await this.replyMessage(gridEvent);
+
+
             // Retrieve the validation code and echo back.
             var validationCode = gridEvent.Data["validationCode"];
             return new JsonResult(new
             {
                 validationResponse = validationCode
             });
+        }
+
+        private async Task replyMessage(GridEvent<Dictionary<string, string>> gridEvent)
+        {
+            Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
+
+            string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
+            NotificationMessagesClient notificationMessagesClient =
+                new NotificationMessagesClient(connectionString);
+
+            string channelRegistrationId = "c25918d5-5214-487d-8a7d-8a80fd0a0abc";
+
+            var recipient = new List<string> { gridEvent.Data["from"] };
+            var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, "Yeah");
+
+            SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
+
+            Console.WriteLine($"Message id: {result.Receipts[0].MessageId}");
+
+            throw new NotImplementedException();
         }
 
         private async Task<IActionResult> HandleGridEvents(string jsonContent)
