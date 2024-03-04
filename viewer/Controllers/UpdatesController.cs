@@ -67,10 +67,6 @@ namespace viewer.Controllers
             {
                 var jsonContent = await reader.ReadToEndAsync();
 
-                Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
-
-                await this.replyMessage(jsonContent);
-
                 // Check the event type.
                 // Return the validation code if it's 
                 // a subscription validation request. 
@@ -112,6 +108,7 @@ namespace viewer.Controllers
                 gridEvent.EventTime.ToLongTimeString(),
                 jsonContent.ToString());
 
+            await this.replyMessage(jsonContent);
 
             // Retrieve the validation code and echo back.
             var validationCode = gridEvent.Data["validationCode"];
@@ -157,6 +154,8 @@ namespace viewer.Controllers
                     e.ToString());
             }
 
+            await this.replyMessage(jsonContent);
+
             return Ok();
         }
 
@@ -173,6 +172,8 @@ namespace viewer.Controllers
                 details.Time,
                 eventData.ToString()
             );
+
+            await this.replyMessage(jsonContent);
 
             return Ok();
         }
