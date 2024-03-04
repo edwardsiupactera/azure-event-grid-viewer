@@ -113,10 +113,6 @@ namespace viewer.Controllers
                 jsonContent.ToString());
 
 
-
-            await this.replyMessage(gridEvent);
-
-
             // Retrieve the validation code and echo back.
             var validationCode = gridEvent.Data["validationCode"];
             return new JsonResult(new
