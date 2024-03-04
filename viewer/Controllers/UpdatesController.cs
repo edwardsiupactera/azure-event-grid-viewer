@@ -138,8 +138,6 @@ namespace viewer.Controllers
             SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
 
             Console.WriteLine($"Message id: {result.Receipts[0].MessageId}");
-
-            throw new NotImplementedException();
         }
 
         private async Task<IActionResult> HandleGridEvents(string jsonContent)
