@@ -108,7 +108,7 @@ namespace viewer.Controllers
                 gridEvent.EventTime.ToLongTimeString(),
                 jsonContent.ToString());
 
-            await this.replyMessage(jsonContent);
+            await this.replyMessage(jsonContent, 1);
 
             // Retrieve the validation code and echo back.
             var validationCode = gridEvent.Data["validationCode"];
@@ -116,28 +116,6 @@ namespace viewer.Controllers
             {
                 validationResponse = validationCode
             });
-        }
-
-        private async Task replyMessage(string jsonContent)
-        {
-            Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
-            Console.WriteLine($"jsonContent: {jsonContent}");
-
-            if (jsonContent.Contains("AdvancedMessageReceived"))
-            {
-                string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
-                NotificationMessagesClient notificationMessagesClient =
-                    new NotificationMessagesClient(connectionString);
-
-                string channelRegistrationId = "c25918d5-5214-487d-8a7d-8a80fd0a0abc";
-
-                var recipient = new List<string> { "+85297278816" };
-                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, "Yeah");
-
-                SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
-
-                Console.WriteLine($"Message id: {result.Receipts[0].MessageId}");
-            }
         }
 
         private async Task<IActionResult> HandleGridEvents(string jsonContent)
@@ -157,7 +135,7 @@ namespace viewer.Controllers
                     e.ToString());
             }
 
-            await this.replyMessage(jsonContent);
+            await this.replyMessage(jsonContent, 2);
 
             return Ok();
         }
@@ -176,9 +154,31 @@ namespace viewer.Controllers
                 eventData.ToString()
             );
 
-            await this.replyMessage(jsonContent);
+            await this.replyMessage(jsonContent, 3);
 
             return Ok();
+        }
+
+        private async Task replyMessage(string jsonContent, int count)
+        {
+            Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
+            Console.WriteLine($"jsonContent: {jsonContent}");
+
+            if (jsonContent.Contains("AdvancedMessageReceived"))
+            {
+                string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
+                NotificationMessagesClient notificationMessagesClient =
+                    new NotificationMessagesClient(connectionString);
+
+                string channelRegistrationId = "c25918d5-5214-487d-8a7d-8a80fd0a0abc";
+
+                var recipient = new List<string> { "+85297278816" };
+                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, $"Yeah {count}");
+
+                SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
+
+                Console.WriteLine($"Message id: {result.Receipts[0].MessageId}");
+            }
         }
 
         private static bool IsCloudEvent(string jsonContent)
