@@ -67,6 +67,8 @@ namespace viewer.Controllers
             {
                 var jsonContent = await reader.ReadToEndAsync();
 
+                Console.WriteLine("Azure Communication Services - 1\n");
+
                 // Check the event type.
                 // Return the validation code if it's 
                 // a subscription validation request. 
