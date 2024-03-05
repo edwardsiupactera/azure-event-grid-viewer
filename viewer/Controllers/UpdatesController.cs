@@ -134,7 +134,7 @@ namespace viewer.Controllers
                     details.EventTime.ToLongTimeString(),
                     e.ToString());
 
-                await this.replyMessage(details, 2);
+                await this.replyMessage(details, jsonContent);
             }
 
 
@@ -160,10 +160,10 @@ namespace viewer.Controllers
             return Ok();
         }
 
-        private async Task replyMessage(GridEvent<dynamic> detail, int v)
+        private async Task replyMessage(GridEvent<dynamic> detail, string jsonContent)
         {
             Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
-            Console.WriteLine($"jsonContent: {detail}");
+            Console.WriteLine($"jsonContent: {jsonContent}");
 
             if (detail.EventType.Contains("AdvancedMessageReceived"))
             {
@@ -171,7 +171,7 @@ namespace viewer.Controllers
                 NotificationMessagesClient notificationMessagesClient =
                     new NotificationMessagesClient(connectionString);
 
-                string channelRegistrationId = "c25918d5-5214-487d-8a7d-8a80fd0a0abc";
+                string channelRegistrationId = "ddfeab03-844a-4bfb-8935-b3013c065944";
 
                 var recipient = new List<string> { detail.Data["from"] };
                 var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, $"Yeah {detail.Data["content"]}");
