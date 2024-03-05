@@ -189,20 +189,24 @@ namespace viewer.Controllers
                 string channelRegistrationId = "ddfeab03-844a-4bfb-8935-b3013c065944";
 
 
-                var reply = "I am still in training. Could you please rephrase your question? or input \"hi\" to start again";
+                var reply = "I am still in training. Could you please rephrase your question? or input \"Hi\" to start again";
 
-                if (detail.Data.Content == "hi")
+                if (detail.Data.Content == "Hi")
                 {
                     reply = "Welcome to the GienTech POC! To initiate a conversation, kindly provide the mobile OTP.";
                 }
-
-                if (detail.Data.Content.Length == 4 && detail.Data.Content != "9900" && int.TryParse(detail.Data.Content, out int number))
+                else
                 {
-                    reply = "The OTP entered is invalid. Please try again.";
-                } else
-                {
-                    reply = "Hello! I'm here to assist you. How can I help you today?";
+                    if (detail.Data.Content.Length == 4 && detail.Data.Content != "9900" && int.TryParse(detail.Data.Content, out int number))
+                    {
+                        reply = "The OTP entered is invalid. Please try again.";
+                    }
+                    else
+                    {
+                        reply = "Hello! I'm here to assist you. How can I help you today?";
+                    }
                 }
+
 
                 var recipient = new List<string> { detail.Data.From };
                 var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, reply);
