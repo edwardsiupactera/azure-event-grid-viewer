@@ -189,7 +189,7 @@ namespace viewer.Controllers
                 string channelRegistrationId = "ddfeab03-844a-4bfb-8935-b3013c065944";
 
 
-                var reply = "I am still in training. Could you please rephrase your question?";
+                var reply = "I am still in training. Could you please rephrase your question? or input \"hi\" to start again";
 
                 if (detail.Data.Content == "hi")
                 {
