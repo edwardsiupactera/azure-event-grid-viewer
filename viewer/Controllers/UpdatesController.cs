@@ -173,8 +173,8 @@ namespace viewer.Controllers
 
                 string channelRegistrationId = "ddfeab03-844a-4bfb-8935-b3013c065944";
 
-                var recipient = new List<string> { detail.Data["from"] };
-                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, $"Yeah {detail.Data["content"]}");
+                var recipient = new List<string> { "85297278816" };
+                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, $"{jsonContent}");
 
                 SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
 
