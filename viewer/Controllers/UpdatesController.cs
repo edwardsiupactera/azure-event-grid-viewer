@@ -134,7 +134,12 @@ namespace viewer.Controllers
                     details.EventTime.ToLongTimeString(),
                     e.ToString());
 
-                await this.replyMessage(details, jsonContent);
+                try {
+                    await this.replyMessage(details, jsonContent);
+                }
+                catch (Exception eee) {
+                    Console.WriteLine($"e: {eee}");
+                }
             }
 
 
@@ -174,6 +179,7 @@ namespace viewer.Controllers
             Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
             Console.WriteLine($"jsonContent: {jsonContent}");
 
+
             if (detail.EventType.Contains("AdvancedMessageReceived"))
             {
                 string connectionString = "endpoint=https://gientech-whatsapp-communication-services.unitedstates.communication.azure.com/;accesskey=16NWai2al6q3WJNa2FFazyBfJaP/fYR3cnf6uGaP/jkf1/wRKR1HOh7Yc0JTtTLNnB4Y6jfrZ9oClLLCnc950A==";
@@ -182,8 +188,24 @@ namespace viewer.Controllers
 
                 string channelRegistrationId = "ddfeab03-844a-4bfb-8935-b3013c065944";
 
+
+                var reply = "I am still in training. Could you please rephrase your question?";
+
+                if (detail.Data.Content == "hi")
+                {
+                    reply = "Welcome to the GienTech POC! To initiate a conversation, kindly provide the mobile OTP.";
+                }
+
+                if (detail.Data.Content.Length == 4 && detail.Data.Content != "9900" && int.TryParse(detail.Data.Content, out int number))
+                {
+                    reply = "The OTP entered is invalid. Please try again.";
+                } else
+                {
+                    reply = "Hello! I'm here to assist you. How can I help you today?";
+                }
+
                 var recipient = new List<string> { detail.Data.From };
-                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, $"Reply {detail.Data.Content}");
+                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, reply);
 
                 SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
 
