@@ -160,7 +160,16 @@ namespace viewer.Controllers
             return Ok();
         }
 
-        private async Task replyMessage(GridEvent<dynamic> detail, string jsonContent)
+        public class CommunicationEventData
+        {
+            public string Content { get; set; }
+            public string ChannelType { get; set; }
+            public string From { get; set; }
+            public string To { get; set; }
+            public DateTime ReceivedTimestamp { get; set; }
+        }
+
+        private async Task replyMessage(GridEvent<CommunicationEventData> detail, string jsonContent)
         {
             Console.WriteLine("Azure Communication Services - Send WhatsApp Messages\n");
             Console.WriteLine($"jsonContent: {jsonContent}");
@@ -173,8 +182,8 @@ namespace viewer.Controllers
 
                 string channelRegistrationId = "ddfeab03-844a-4bfb-8935-b3013c065944";
 
-                var recipient = new List<string> { "85297278816" };
-                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, $"{jsonContent}");
+                var recipient = new List<string> { detail.Data.From };
+                var textContent = new TextNotificationContent(new Guid(channelRegistrationId), recipient, $"Reply {detail.Data.Content}");
 
                 SendMessageResult result = await notificationMessagesClient.SendAsync(textContent);
 
