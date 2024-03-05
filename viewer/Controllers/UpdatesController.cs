@@ -125,7 +125,7 @@ namespace viewer.Controllers
             {
                 // Invoke a method on the clients for 
                 // an event grid notiification.                        
-                var details = JsonConvert.DeserializeObject<GridEvent<dynamic>>(e.ToString());
+                var details = JsonConvert.DeserializeObject<GridEvent<CommunicationEventData>>(e.ToString());
                 await this._hubContext.Clients.All.SendAsync(
                     "gridupdate",
                     details.Id,
